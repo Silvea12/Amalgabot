@@ -76,8 +76,8 @@ static REGISTRY: Lazy<Mutex<Registry>> = Lazy::new(|| Mutex::new(Registry { e: V
 pub fn call() {
     let mut registry = REGISTRY.lock().unwrap();
     let f = registry.e.pop().unwrap();
-    let f = f(None, None);
-    let handle = tokio::spawn(async move { f.await });
+    let fut = f(None, None);
+    let handle = tokio::spawn(async move { fut.await });
 
     tokio::task::block_in_place(|| {
         tokio::runtime::Handle::current().block_on(handle).unwrap();
